@@ -1,2 +1,3 @@
 .idea
 MySite/MySite/settings.py
+MySite/db.sqlite3
