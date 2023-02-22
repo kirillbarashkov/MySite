@@ -2,7 +2,10 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('', main_page),  # http://127.0.0.1:8000/
-    # path('projects/<int:project_id>/', projects),  # http://127.0.0.1:8000/projects/1/
-    path('projects/<slug:project_name>/', projects),  # http://127.0.0.1:8000/projects/majicball/
+    path('', main_page, name='home'),  # http://127.0.0.1:8000/
+    path('about/', about, name='about'),
+    path('addproject/', addproject, name='add_project'),
+    path('contact/', contact, name='contact'),
+    path('login/', login, name='login'),
+    path('post/<int:post_id>/', show_post, name='post')
 ]
