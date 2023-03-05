@@ -1,5 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+
+from .forms import *
 from .models import *
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
@@ -29,8 +31,16 @@ def about(request):
     return render(request, 'Main/about.html', context=context)
 
 
-def addproject(request):
-    return HttpResponse('Добавление проекта')
+def add_project(request):
+    if request.method == 'POST':
+        form = AddProjectForm(request.POST, request.FILES)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            form.save()
+            return redirect('home')
+    else:
+        form = AddProjectForm()
+    return render(request, 'Main/add_project.html', {'form': form, 'menu': menu, 'title': 'Добавление проекта'})
 
 
 def contact(request):
@@ -45,8 +55,16 @@ def pageNotFound(request, exseption):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
 
 
-def show_post(request, post_id):
-    return HttpResponse(f'Отображение проекта с id = {post_id}')
+def show_post(request, post_slug):
+    post = get_object_or_404(Main, slug=post_slug)
+
+    context = {
+        'post': post,
+        'menu': menu,
+        'title': post.title,
+        'cat_selected': post.cat_id,
+    }
+    return render(request, 'Main/post.html', context=context)
 
 
 def show_category(request, cat_id):
